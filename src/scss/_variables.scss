@@ -1,0 +1,25 @@
+$primary: #d86d20;
+
+$gray-lighter: #eee;
+$gray-light: #ccc;
+$gray: #aaa;
+$gray-dark: #444;
+$gray-darker: #121212;
+
+$font-family-base: 'Open Sans', sans-serif;
+$text-colour: $gray-darker;
+$text-size: 16px;
+
+$border-radius: 4px;
+
+$gutter-width: 20px;
+
+// breakpoints
+// same as bootstrap
+$screen-sm: 768px;
+$screen-md: 992px;
+$screen-lg: 1200px;
+
+$screen-xs-max: 767px;
+$screen-sm-max: 993px;
+$screen-md-max: 1199px;

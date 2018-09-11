@@ -1,0 +1,14 @@
+.row {
+    margin: 0 - ($gutter-width / 2);
+    
+    &:after {
+        clear: both;
+        display: block;
+        content: '';   
+    }
+
+    > .col {
+        padding: 0 5px;
+        float: left;
+    }
+}
