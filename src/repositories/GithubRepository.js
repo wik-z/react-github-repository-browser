@@ -6,16 +6,18 @@ import axios from 'axios';
  * and return them as Promises to the application.
  */
 class GithubRepository {
-    baseUrl = "https://api.github.com";
+    baseUrl = "https://github.com";
+    apiUrl = "https://api.github.com";
     rawUrl = "https://raw.githubusercontent.com";
 
     /**
      * Performs a search requests for the github repositories
      * @param {string} query - search query string
+     * @param {number} page
      * @returns {Promise}
      */
-    search(query) {
-        return axios.get(`${this.baseUrl}/search/repositories`, { params: { q: query } });
+    search(query, page = 1) {
+        return axios.get(`${this.apiUrl}/search/repositories`, { params: { q: query, page } });
     }
 
     /**
@@ -48,6 +50,15 @@ class GithubRepository {
      */
     readme(owner, repository) {
         return this.file(owner, repository);
+    }
+
+    /**
+     * Returns a url to a Github repository
+     * @param {string} owner 
+     * @param {string} repository 
+     */
+    repositoryUrl(owner, repository) {
+        return `${this.baseUrl}/${owner}/${repository}`;
     }
 }
 

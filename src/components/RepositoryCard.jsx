@@ -6,9 +6,14 @@ import ellipsis from '../filters/ellipsis';
 import datetime from '../filters/datetime';
 
 export default class RepositoryCard extends Component {
+    handleClick() {
+        // send back the repository on click
+        this.props.onClick(this.props.repository);
+    }
+
     render() {
         return (
-            <div className="repository-card" onClick={this.props.onClick}>
+            <div className="repository-card" onClick={this.handleClick.bind(this)}>
                 <div className="repository-card-inner row">
                     <div className="avatar col">
                         <img src={this.props.repository.owner.avatar_url} alt={this.props.repository.owner.login}></img>

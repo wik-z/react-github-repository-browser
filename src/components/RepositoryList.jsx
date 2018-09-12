@@ -22,7 +22,6 @@ class RepositoryList extends Component {
                         > ul {
                             display: flex;
                             flex-wrap: wrap;
-                            width: 100%;
                             padding: 0;
                             list-style: none;
 

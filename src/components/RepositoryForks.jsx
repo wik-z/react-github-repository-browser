@@ -2,16 +2,16 @@ import React from 'react';
 
 export default function RepositoryStars(props) {
     return (
-        <div className="stars">
-            <i className="fa fa-star"></i>
-            {props.stars}
+        <div className="forks">
+            <i className="fa fa-code-fork"></i>
+            {props.forks}
             <style jsx>{`
-                .stars {
+                .forks {
                     font-size: 0.8rem;
 
                     i {
                         margin-right: 4px;
-                        color: #ff9800;
+                        color: #9b01e1;
                     }
                 }
             `}</style>

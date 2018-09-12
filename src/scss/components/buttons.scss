@@ -1,0 +1,30 @@
+.btn {
+    padding: 12px 18px;;
+    font-family: $font-family-base;
+    font-size: 0.96rem;
+    background: none;
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+
+    &.btn-block {
+        display: block;
+    }
+
+    &.btn-primary {
+        background: transparent;
+        border: 2px solid $primary;
+        border-radius: 5px;
+        color: $primary;
+
+        &:hover {
+            color: white;
+            background: $primary;
+        }
+    }
+
+    i.fa {
+        margin-right: 5px;
+    }
+}

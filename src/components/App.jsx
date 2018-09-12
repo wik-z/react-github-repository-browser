@@ -5,6 +5,7 @@ import RepositoryList from './RepositoryList';
 import RepositoryDetails from './RepositoryDetails';
 
 import GithubRepository from '../repositories/GithubRepository';
+import Pagination from './Pagination';
 
 class App extends Component {
     state = {
@@ -13,6 +14,7 @@ class App extends Component {
             isLoading: false, // are we in the middle of a search API request?
             error: false, // has the request failed?
         },
+        searchQuery: '',
         repositories: [], // list of repositories
         selectedRepository: null,
         totalCount: 0,
@@ -36,6 +38,7 @@ class App extends Component {
         }
 
         this.setState({
+            searchQuery: query,
             states: {
                 ...this.state.states,
                 isLoading: true,
@@ -53,7 +56,7 @@ class App extends Component {
                     },
                     repositories: response.data.items,
                     totalCount: response.data.total_count,
-                    totalPages: Math.ceil(response.data.total_count / response.data.items.length),
+                    totalPages: response.data.items.length > 0 ? Math.ceil(response.data.total_count / response.data.items.length) : 0,
                     perPage: response.data.items.length,
                     page: 1, // reset page to 1 by default on search
                 });
@@ -72,26 +75,99 @@ class App extends Component {
         });
     }
 
+    goToPage(page) {
+        this.setState({
+            states: {
+                ...this.state.states,
+                isLoading: true,
+                isSearching: true,
+                error: false,
+            },
+        })
+
+        // re-fetch data
+        GithubRepository
+            .search(this.state.searchQuery, page)
+            .then((response) => {
+                this.setState({
+                    states: {
+                        ...this.state.states,
+                        isLoading: false,
+                    },
+                    repositories: response.data.items,
+                    totalCount: response.data.total_count,
+                    totalPages: response.data.items.length > 0 ? Math.ceil(response.data.total_count / response.data.items.length) : 0,
+                    perPage: response.data.items.length,
+                    page: page,
+                });
+            })
+    }
+
+    nextPage() {
+        this.goToPage(this.state.page + 1);
+    }
+    
+    previousPage() {
+        this.goToPage(this.state.page - 1);
+    }
+
+    canGoToPreviousPage() {
+        if (this.state.page === 1) {
+            return false;
+        }
+
+        if (this.state.totalPages <= 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    canGoToNextPage() {
+        if (this.state.totalPages <= 1) {
+            return false;
+        }
+
+        if (this.state.page === this.state.totalPages) {
+            return false;
+        }
+
+        return true;
+    }
+
     render() {
         return (
             <div className="app">
                 <RepositorySearch isLoading={this.state.states.isLoading} onChange={this.handleSearchQueryChange.bind(this)} />
                 <div className="container">
                     <If condition={this.state.states.isSearching}>
-
                         <If condition={!this.state.states.isLoading}>
                             <div className="repositories-count">
                                 <p>
-                                    Found {this.state.totalCount} repositories matching your criteria.
+                                    We've found {this.state.totalCount} repositories matching your criteria.
                                 </p>
                             </div>
                         </If>
 
                         <RepositoryList onRepositorySelect={this.handleRepositorySelect.bind(this)} repositories={this.state.repositories} isLoading={this.state.states.isLoading} />
+                        
+                        <If condition={!this.state.states.isLoading}>
+                            <Pagination
+                                page={this.state.page} 
+                                totalPages={this.state.totalPages} 
+                                canGoToNextPage={this.canGoToNextPage()} 
+                                canGoToPreviousPage={this.canGoToPreviousPage()}
+                                onNextPageClick={this.nextPage.bind(this)} 
+                                onPreviousPageClick={this.previousPage.bind(this)} 
+                            />
+                        </If>
                     </If>
                 </div>
 
-                <RepositoryDetails onClose={this.handleRepositoryDetailsClose.bind(this)} repository={this.state.selectedRepository} />
+                <RepositoryDetails 
+                    onClose={this.handleRepositoryDetailsClose.bind(this)} 
+                    repository={this.state.selectedRepository} 
+                />
 
                 <style jsx global>{`
                     .app {
